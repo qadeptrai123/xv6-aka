@@ -14,61 +14,52 @@ void freerange(void *pa_start, void *pa_end);
 extern char end[]; // first address after kernel.
                    // defined by kernel.ld.
 
-struct run {
+struct run
+{
   struct run *next;
 };
 
-struct {
+struct
+{
   struct spinlock lock;
   struct run *freelist;
 } kmem;
 
-void
-kinit()
+void kinit()
 {
   initlock(&kmem.lock, "kmem");
-  freerange(end, (void*)PHYSTOP);
+  freerange(end, (void *)PHYSTOP);
 }
 
-
-
-void
-freerange(void *pa_start, void *pa_end)
+void freerange(void *pa_start, void *pa_end)
 {
   char *p;
-  p = (char*)PGROUNDUP((uint64)pa_start);
-  for(; p + PGSIZE <= (char*)pa_end; p += PGSIZE) {
+  p = (char *)PGROUNDUP((uint64)pa_start);
+  for (; p + PGSIZE <= (char *)pa_end; p += PGSIZE)
     kfree(p);
-  }
 }
 
 // Free the page of physical memory pointed at by pa,
 // which normally should have been returned by a
 // call to kalloc().  (The exception is when
 // initializing the allocator; see kinit above.)
-void
-kfree(void *pa)
+void kfree(void *pa)
 {
   struct run *r;
 
-  if(((uint64)pa % PGSIZE) != 0 || (char*)pa < end || (uint64)pa >= PHYSTOP)
+  if (((uint64)pa % PGSIZE) != 0 || (char *)pa < end || (uint64)pa >= PHYSTOP)
     panic("kfree");
 
-
-#ifndef LAB_SYSCALL
   // Fill with junk to catch dangling refs.
   memset(pa, 1, PGSIZE);
-#endif
-  
-  r = (struct run*)pa;
+
+  r = (struct run *)pa;
 
   acquire(&kmem.lock);
   r->next = kmem.freelist;
   kmem.freelist = r;
   release(&kmem.lock);
 }
-
-
 
 // Allocate one 4096-byte page of physical memory.
 // Returns a pointer that the kernel can use.
@@ -80,14 +71,43 @@ kalloc(void)
 
   acquire(&kmem.lock);
   r = kmem.freelist;
-  if(r) {
+  if (r)
     kmem.freelist = r->next;
+  release(&kmem.lock);
+
+  if (r)
+    memset((char *)r, 5, PGSIZE); // fill with junk
+  return (void *)r;
+}
+
+uint64 count_freemem()
+{
+  struct run *r;
+  uint64 free_mem = 0;
+
+  acquire(&kmem.lock); // Khóa bộ nhớ để tránh race condition
+  for (r = kmem.freelist; r; r = r->next)
+    free_mem += PGSIZE;
+  release(&kmem.lock); // Mở khóa sau khi đếm xong
+
+  return free_mem;
+}
+
+
+//extern struct run *freelist;
+
+uint64 kalloc_freemem(void) {
+  struct run *r;
+  uint64 free_mem = 0;
+  
+  acquire(&kmem.lock);
+  r = kmem.freelist;
+  while (r) {
+      free_mem += PGSIZE;
+      r = r->next;
   }
   release(&kmem.lock);
-#ifndef LAB_SYSCALL
-  if(r)
-    memset((char*)r, 5, PGSIZE); // fill with junk
-#endif
-  return (void*)r;
+  
+  return free_mem;
 }
 

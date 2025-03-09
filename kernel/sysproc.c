@@ -5,6 +5,7 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
+#include "sysinfo.h"
 
 uint64
 sys_exit(void)
@@ -12,7 +13,7 @@ sys_exit(void)
   int n;
   argint(0, &n);
   exit(n);
-  return 0;  // not reached
+  return 0; // not reached
 }
 
 uint64
@@ -43,7 +44,7 @@ sys_sbrk(void)
 
   argint(0, &n);
   addr = myproc()->sz;
-  if(growproc(n) < 0)
+  if (growproc(n) < 0)
     return -1;
   return addr;
 }
@@ -55,12 +56,14 @@ sys_sleep(void)
   uint ticks0;
 
   argint(0, &n);
-  if(n < 0)
+  if (n < 0)
     n = 0;
   acquire(&tickslock);
   ticks0 = ticks;
-  while(ticks - ticks0 < n){
-    if(killed(myproc())){
+  while (ticks - ticks0 < n)
+  {
+    if (killed(myproc()))
+    {
       release(&tickslock);
       return -1;
     }
@@ -91,3 +94,45 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+uint64 sys_hello(void)
+{
+  printf("Hello, world!\n");
+  return 0;
+}
+
+extern uint64 count_freemem();
+extern uint64 count_running_procs();
+extern uint64 count_open_files();
+uint64 sys_sysinfo(void)
+{
+  struct sysinfo info;
+  uint64 addr; // Địa chỉ con trỏ user-space
+
+  argaddr(0, &addr); // Gọi argaddr() để lấy địa chỉ từ user-space
+  if (addr == 0)
+  { // Kiểm tra xem địa chỉ có hợp lệ không
+    return -1;
+  }
+
+  // Gọi các hàm lấy thông tin hệ thống
+  info.freemem = count_freemem();
+  info.nproc = count_running_procs();
+  info.nopenfiles = count_open_files();
+
+  // Sao chép kết quả về user-space
+  if (copyout(myproc()->pagetable, addr, (char *)&info, sizeof(info)) < 0)
+    return -1;
+
+  return 0;
+}
+
+
+uint64 sys_trace(void) {
+  struct proc* p = myproc();
+  //printf("sys_trace %d: \n", p->pid);
+  int trace_mask;
+  argint(0, &trace_mask);
+  if (trace_mask < 0) return -1;
+  p->trace_mask = trace_mask;
+  return 0; 
+} 
