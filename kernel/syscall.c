@@ -125,7 +125,7 @@ static uint64 (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
-[SYS_trace]   sys_trace,
+[SYS_trace]   sys_trace, // Thêm vào mảng hàm sys_trace, đại diện bởi define SYS_trace
 [SYS_hello] sys_hello,
 [SYS_sysinfo] sys_sysinfo,
 };
@@ -152,7 +152,7 @@ char *syscallnames[] = {
   [SYS_link]    "link",
   [SYS_mkdir]   "mkdir",
   [SYS_close]   "close",
-  [SYS_trace]   "trace",
+  [SYS_trace]   "trace", //Thêm vào tên của system call trace, đại diện bởi define SYS_trace
   [SYS_hello]   "hello",
   [SYS_sysinfo] "sysinfo",
 };
@@ -168,14 +168,11 @@ void syscall(void)
     // Use num to lookup the system call function for num, call it,
     // and store its return value in p->trapframe->a0
     p->trapframe->a0 = syscalls[num]();
-    // if (p->pid == 3) {
-    //   printf("%d %d\n", p->trace_mask, (p->trace_mask >> num & 1));
-    //   printf("%d %s %ld\n", p->pid, syscallnames[num], p->trapframe->a0);
-    // }
+    
+    // Kiểm tra trace_mask để biết system call này có cần được in ra hay không?
     if ((p->trace_mask >> num) & 1) {
-      // printf("%d\n", p->trace_mask);
       printf("%d: syscall %s -> %ld\n", p->pid, syscallnames[num], p->trapframe->a0);
-    }
+    } 
 
   } else {
     printf("%d %s: unknown sys call %d\n",

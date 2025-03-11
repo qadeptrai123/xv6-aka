@@ -306,7 +306,7 @@ int fork(void)
   *(np->trapframe) = *(p->trapframe);
 
 
-  np->trace_mask = p->trace_mask;
+  np->trace_mask = p->trace_mask; //Copy trace_mask từ tiến trình cha vào tiến trình con
 
   // Cause fork to return 0 in the child.
   np->trapframe->a0 = 0;

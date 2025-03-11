@@ -10,7 +10,6 @@ int main(int argc, char* argv[]) {
     
     
     int trace_mask = atoi(argv[1]);
-    ///printf("trace_mask: %d \n", trace_mask);
     if (trace(trace_mask) < 0) {
         fprintf(2, "trace failed\n");
         exit(1);

@@ -129,7 +129,6 @@ uint64 sys_sysinfo(void)
 
 uint64 sys_trace(void) {
   struct proc* p = myproc();
-  //printf("sys_trace %d: \n", p->pid);
   int trace_mask;
   argint(0, &trace_mask);
   if (trace_mask < 0) return -1;
