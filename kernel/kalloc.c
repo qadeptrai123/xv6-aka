@@ -92,22 +92,3 @@ uint64 count_freemem()
 
   return free_mem;
 }
-
-
-//extern struct run *freelist;
-
-uint64 kalloc_freemem(void) {
-  struct run *r;
-  uint64 free_mem = 0;
-  
-  acquire(&kmem.lock);
-  r = kmem.freelist;
-  while (r) {
-      free_mem += PGSIZE;
-      r = r->next;
-  }
-  release(&kmem.lock);
-  
-  return free_mem;
-}
-
