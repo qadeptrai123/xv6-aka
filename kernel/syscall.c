@@ -101,6 +101,7 @@ extern uint64 sys_unlink(void);
 extern uint64 sys_link(void);
 extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
+extern uint64 sys_vmprint(void);
 
 #ifdef LAB_NET
 extern uint64 sys_bind(void);
@@ -111,6 +112,7 @@ extern uint64 sys_recv(void);
 #ifdef LAB_PGTBL
 extern uint64 sys_pgpte(void);
 extern uint64 sys_kpgtbl(void);
+extern void vmprint(pagetable_t pagetable);
 #endif
 
 // An array mapping syscall numbers from syscall.h
@@ -137,6 +139,7 @@ static uint64 (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
+[SYS_vmprint] sys_vmprint,
 #ifdef LAB_NET
 [SYS_bind] sys_bind,
 [SYS_unbind] sys_unbind,
@@ -146,6 +149,8 @@ static uint64 (*syscalls[])(void) = {
 #ifdef LAB_PGTBL
 [SYS_pgpte] sys_pgpte,
 [SYS_kpgtbl] sys_kpgtbl,
+[SYS_vmprint] sys_vmprint,
+
 #endif
 };
 

@@ -486,11 +486,32 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
   }
 }
 
+static void vmprint_rec(pagetable_t pagetable, int level) {
+  for (int i = 0; i < 512; i++) {
+      pte_t pte = pagetable[i];
+      if (pte & PTE_V) {
+          uint64 pa = PTE2PA(pte);
 
+          // In dấu ".." tùy theo level
+          for (int j = 0; j < level; j++) {
+              printf(" ..");
+          }
+
+          printf("%d: pte 0x%016lx pa 0x%016lx\n", i, pte, pa);
+
+          if ((pte & (PTE_R | PTE_W | PTE_X)) == 0) {
+              // Đây là một page table chứ không phải leaf
+              vmprint_rec((pagetable_t)pa, level + 1);
+          }
+      }
+  }
+}
 #ifdef LAB_PGTBL
 void
 vmprint(pagetable_t pagetable) {
   // your code here
+  printf("page table %p\n", pagetable);
+  vmprint_rec(pagetable, 0);
 }
 #endif
 
@@ -502,3 +523,30 @@ pgpte(pagetable_t pagetable, uint64 va) {
   return walk(pagetable, va, 0);
 }
 #endif
+
+// void vmprint(pagetable_t pagetable) {
+//   printf("page table %p\n", pagetable);
+//   vmprint_helper(pagetable, 1); // gọi hàm phụ xử lý đệ quy
+// }
+// static void
+// vmprint_helper(pagetable_t pagetable, int level) {
+//   for (int i = 0; i < 512; i++) {
+//     pte_t pte = pagetable[i];
+
+//     if (pte & PTE_V) {
+//       uint64 pa = PTE2PA(pte);
+
+//       // In dấu ".." theo cấp độ
+//       for (int j = 0; j < level; j++) {
+//         printf(" ..");
+//       }
+
+//       printf("%d: pte %p pa %p\n", i, (void *)pte, (void *)pa);
+
+//       // Nếu không phải leaf PTE (tức là mapping đến 1 page table con)
+//       if ((pte & (PTE_R | PTE_W | PTE_X)) == 0) {
+//         vmprint_helper((pagetable_t)pa, level + 1);
+//       }
+//     }
+//   }
+// }
