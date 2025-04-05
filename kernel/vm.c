@@ -497,7 +497,7 @@ static void vmprint_rec(pagetable_t pagetable, int level) {
               printf(" ..");
           }
 
-          printf("%d: pte 0x%016lx pa 0x%016lx\n", i, pte, pa);
+          printf("%d: pte %p pa %p\n", i, (void *)pte, (void *)pa);
 
           if ((pte & (PTE_R | PTE_W | PTE_X)) == 0) {
               // Đây là một page table chứ không phải leaf

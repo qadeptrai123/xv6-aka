@@ -101,6 +101,7 @@ extern uint64 sys_unlink(void);
 extern uint64 sys_link(void);
 extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
+//thêm mới
 extern uint64 sys_vmprint(void);
 
 #ifdef LAB_NET
@@ -112,6 +113,7 @@ extern uint64 sys_recv(void);
 #ifdef LAB_PGTBL
 extern uint64 sys_pgpte(void);
 extern uint64 sys_kpgtbl(void);
+//thêm mới
 extern void vmprint(pagetable_t pagetable);
 #endif
 
@@ -139,7 +141,7 @@ static uint64 (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
-[SYS_vmprint] sys_vmprint,
+
 #ifdef LAB_NET
 [SYS_bind] sys_bind,
 [SYS_unbind] sys_unbind,
@@ -153,8 +155,6 @@ static uint64 (*syscalls[])(void) = {
 
 #endif
 };
-
-
 
 void
 syscall(void)
