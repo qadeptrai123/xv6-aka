@@ -104,6 +104,7 @@ extern uint64 sys_close(void);
 //thêm mới
 extern uint64 sys_vmprint(void);
 
+
 #ifdef LAB_NET
 extern uint64 sys_bind(void);
 extern uint64 sys_unbind(void);
@@ -154,6 +155,7 @@ static uint64 (*syscalls[])(void) = {
 [SYS_kpgtbl] sys_kpgtbl,
 [SYS_vmprint] sys_vmprint,
 [SYS_pgaccess] sys_pgaccess,  
+
 
 #endif
 };

@@ -165,6 +165,7 @@ sys_uptime(void)
 uint64
 sys_vmprint(void)
 {
-  vmprint(myproc()->pagetable);
+  struct proc *p = myproc();
+  p->vmprint_flag = 1;
   return 0;
 }
