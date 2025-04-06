@@ -110,7 +110,6 @@ static struct proc*
 allocproc(void)
 {
   struct proc *p;
-
   for(p = proc; p < &proc[NPROC]; p++) {
     acquire(&p->lock);
     if(p->state == UNUSED) {
@@ -131,6 +130,8 @@ found:
     release(&p->lock);
     return 0;
   }
+  //them moi
+  p->vmprint_flag = 0;
 
   // An empty user page table.
   p->pagetable = proc_pagetable(p);
