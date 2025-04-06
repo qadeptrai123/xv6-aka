@@ -91,6 +91,12 @@ int sys_pgpte(void)
 uint64
 sys_vmprint(void)
 {
+  vmprint(myproc()->pagetable);
+  return 0;
+}
+
+int sys_vmprint_on(void)
+{
   struct proc *p = myproc();
   p->print_page_table = 1;
   return 0;
@@ -166,10 +172,3 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
-
-// uint64
-// sys_vmprint(void)
-// {
-//   vmprint(myproc()->pagetable);
-//   return 0;
-// }

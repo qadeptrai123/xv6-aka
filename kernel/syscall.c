@@ -111,6 +111,7 @@ extern uint64 sys_pgpte(void);
 extern uint64 sys_kpgtbl(void);
 // thêm mới
 extern void vmprint(pagetable_t pagetable);
+extern uint64 sys_vmprint_on(void);
 extern uint64 sys_pgaccess(void);
 #endif
 
@@ -149,6 +150,7 @@ static uint64 (*syscalls[])(void) = {
     [SYS_pgpte] sys_pgpte,
     [SYS_kpgtbl] sys_kpgtbl,
     [SYS_vmprint] sys_vmprint,
+    [SYS_vmprint_on] sys_vmprint_on,
     [SYS_pgaccess] sys_pgaccess,
 
 #endif

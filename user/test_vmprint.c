@@ -10,9 +10,10 @@ int main(int argc, char *argv[])
     fprintf(2, "Usage: %s command [args]\n", argv[0]);
     exit(1);
   }
-  
+
+  vmprint_on();
+
   exec(argv[1], &argv[1]);
   fprintf(2, "exec %s failed\n", argv[1]);
   exit(0);
-  
 }
