@@ -38,7 +38,7 @@ uint64 pgpte(void*);
 void kpgtbl(void);
 //thêm mới
 int vmprint(void);  // khai báo hàm wrapper
-
+int pgaccess(void *base, int len, void *mask);
 #endif
 
 // ulib.c

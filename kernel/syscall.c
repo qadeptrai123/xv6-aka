@@ -115,6 +115,7 @@ extern uint64 sys_pgpte(void);
 extern uint64 sys_kpgtbl(void);
 //thêm mới
 extern void vmprint(pagetable_t pagetable);
+extern uint64 sys_pgaccess(void);
 #endif
 
 // An array mapping syscall numbers from syscall.h
@@ -151,8 +152,6 @@ static uint64 (*syscalls[])(void) = {
 #ifdef LAB_PGTBL
 [SYS_pgpte] sys_pgpte,
 [SYS_kpgtbl] sys_kpgtbl,
-[SYS_vmprint] sys_vmprint,
-
 #endif
 };
 

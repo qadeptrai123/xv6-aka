@@ -43,3 +43,4 @@ entry("recv");
 entry("pgpte");
 entry("kpgtbl");
 entry("vmprint");
+entry("pgaccess");
