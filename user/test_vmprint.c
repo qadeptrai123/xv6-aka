@@ -1,48 +1,34 @@
 #include "kernel/types.h"
 #include "user/user.h"
 
-// int main(int argc, char *argv[])
-// {
-//   vmprint();  
-//   exit(0);
-// }
-// int main(int argc, char *argv[]) {
-//   if (argc > 1 && strcmp(argv[1], "test_vmprint") == 0) {
-//       int pid = fork();
-//       if (pid == 0) {  // Quá trình con
-//           // In bảng trang trước khi thực thi exec
-//           vmprint();
-//           exec(argv[2], argv + 2);  // Chạy lệnh echo hello (hoặc lệnh khác)
-//           printf("Exec failed\n");  // In lỗi nếu exec thất bại
-//           exit(0);  // Đảm bảo tiến trình con kết thúc
-//       } else if (pid > 0) {  // Quá trình cha
-//           wait(0);  // Chờ quá trình con kết thúc
-//       } else {
-//           printf("Fork failed\n");
-//           exit(1);
-//       }
-//   } else {
-//       // Nếu không có "test_vmprint", chỉ gọi exec bình thường
-//       exec(argv[1], argv + 1);
-//   }
-//   exit(0);
-// }
-int main(int argc, char* argv[]) { 
-  if (argc > 1 && strcmp(argv[1], "test_vmprint") == 0) {
-    int pid = fork();
-    if (pid == 0) {  // Child process
-      vmprint();  // Print the page table
-      exec(argv[2], argv + 2);  // Execute the command
-      printf("Exec failed\n");  // If exec fails
-      exit(0);  // Ensure child process exits
-    } else if (pid > 0) {  // Parent process
-      wait(0);  // Wait for child process to finish
-    } else {
-      printf("Fork failed\n");
-      exit(1);
-    }
-  } else {
-    exec(argv[1], argv + 1);  // Execute the command normally
+int main(int argc, char *argv[])
+{
+#ifdef LAB_PGTBL
+  // In page table của chính tiến trình `test_vmprint`
+  kpgtbl();
+#endif
+
+  // Nếu không có lệnh nào được truyền, chỉ in page table là đủ
+  if (argc < 2)
+  {
+    // báo lỗi
+    fprintf(2, "Usage: %s command [args]\n", argv[0]);
+    exit(0);
   }
+
+  int pid = fork();
+  if (pid == 0)
+  {
+    // Tiến trình con thực thi lệnh người dùng truyền vào
+    exec(argv[1], &argv[1]);
+    fprintf(2, "exec %s failed\n", argv[1]);
+    exit(1);
+  }
+  else
+  {
+    // Cha chờ con kết thúc
+    wait(0);
+  }
+
   exit(0);
 }
