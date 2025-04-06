@@ -132,6 +132,8 @@ int exec(char *path, char **argv)
 
   if (p->print_page_table)
   {
+    printf("exec %s\n", path);
+    printf("p->print_page_table %d\n", p->print_page_table);
     printf("page table %p\n", p->pagetable);
     vmprint(p->pagetable);
   }

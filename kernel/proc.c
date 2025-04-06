@@ -140,6 +140,8 @@ found:
     return 0;
   }
 
+  p->print_page_table = 0;
+
   // Set up new context to start executing at forkret,
   // which returns to user space.
   memset(&p->context, 0, sizeof(p->context));
