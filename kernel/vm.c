@@ -493,7 +493,7 @@ static void vmprint_rec(pagetable_t pagetable, int level) {
           uint64 pa = PTE2PA(pte);
 
           // In dấu ".." tùy theo level
-          for (int j = 0; j < level; j++) {
+          for (int j = 0; j <= level; j++) {
               printf(" ..");
           }
 

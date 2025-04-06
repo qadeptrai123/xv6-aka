@@ -152,6 +152,9 @@ static uint64 (*syscalls[])(void) = {
 #ifdef LAB_PGTBL
 [SYS_pgpte] sys_pgpte,
 [SYS_kpgtbl] sys_kpgtbl,
+[SYS_vmprint] sys_vmprint,
+[SYS_pgaccess] sys_pgaccess,  
+
 #endif
 };
 
