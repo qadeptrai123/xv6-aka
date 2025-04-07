@@ -35,6 +35,5 @@
 #define SYS_recv 32
 #define SYS_pgpte 33
 #define SYS_kpgtbl 34
-#define SYS_vmprint 35
-#define SYS_vmprint_on 36
-#define SYS_pgaccess 37
+#define SYS_vmprint_on 35
+#define SYS_pgaccess 36

@@ -83,11 +83,7 @@ usertrap(void)
   if(which_dev == 2)
     yield();
 
-  if (p->vmprint_flag) {
-    //printf("Page table for process %s (%d):\n", p->name, p->pid);
-    vmprint(p->pagetable);
-    p->vmprint_flag = 0; // chỉ in 1 lần
-  }
+ 
   usertrapret();
 }
 

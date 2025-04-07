@@ -130,8 +130,6 @@ found:
     release(&p->lock);
     return 0;
   }
-  //them moi
-  p->vmprint_flag = 0;
 
   // An empty user page table.
   p->pagetable = proc_pagetable(p);
@@ -171,6 +169,7 @@ freeproc(struct proc *p)
   p->chan = 0;
   p->killed = 0;
   p->xstate = 0;
+  p->print_page_table = 0;
   p->state = UNUSED;
 }
 

@@ -88,13 +88,6 @@ int sys_pgpte(void)
   return 0;
 }
 
-uint64
-sys_vmprint(void)
-{
-  vmprint(myproc()->pagetable);
-  return 0;
-}
-
 int sys_vmprint_on(void)
 {
   struct proc *p = myproc();
